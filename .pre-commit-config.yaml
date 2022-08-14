@@ -2,26 +2,27 @@ repos:
   - repo: https://github.com/psf/black
     rev: 22.6.0
     hooks:
-    - id: black
+      - id: black
+        args: [ '--skip-string-normalization' ]
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
-    - id: isort
+      - id: isort
   - repo: https://github.com/codespell-project/codespell
     rev: v2.1.0
     hooks:
-    - id: codespell
+      - id: codespell
   - repo: https://github.com/myint/docformatter
     rev: v1.4
     hooks:
-    - id: docformatter
-      args: ["--in-place", "--wrap-descriptions", "79"]
+      - id: docformatter
+        args: [ "--in-place", "--wrap-descriptions", "79" ]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
     hooks:
-    - id: trailing-whitespace
-    - id: end-of-file-fixer
-    - id: double-quote-string-fixer
-    - id: check-merge-conflict
-    - id: fix-encoding-pragma
-      args: ["--remove"]
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: double-quote-string-fixer
+      - id: check-merge-conflict
+      - id: fix-encoding-pragma
+        args: [ "--remove" ]
