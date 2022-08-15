@@ -3,8 +3,7 @@ from typing import List, final
 from xml.etree.ElementTree import ElementTree
 
 from pandas import read_table
-
-from tracklet_parser.tracklet import Tracklet
+from tracklet import Tracklet
 
 
 @final
@@ -63,17 +62,11 @@ class TrackletParser:
                                             'z', float(pose_attribute.text)
                                         )
                                     elif pose_attribute.tag == 'ry':
-                                        tracklet.rotation_y = float(
-                                            pose_attribute.text
-                                        )
+                                        tracklet.rotation_y = float(pose_attribute.text)
                                     elif pose_attribute.tag == 'occlusion':
-                                        tracklet.occluded = int(
-                                            pose_attribute.text
-                                        )
+                                        tracklet.occluded = int(pose_attribute.text)
                                     elif pose_attribute.tag == 'truncation':
-                                        tracklet.truncated = float(
-                                            pose_attribute.text
-                                        )
+                                        tracklet.truncated = float(pose_attribute.text)
                 tracklets.append(tracklet)
 
         # Sort tracklets by ascending frame number
