@@ -15,16 +15,16 @@ python setup.py install
 Creating a folder with text files in KITTI format. Each text file contains the labeling information of its corresponding recording.
 
 ```python
-from tracklet_parser.tracklet_parser import parse_tracklet_xml, convert_tracklets_to_kitti
+from tracklet_parser import TrackletParser
 
 def main():
-    xml = "C:\\Foo\\tracklet_labels.xml"
-    output_dir = "C:\\Foo\\Bar"
+    tracklet_labels = "C:\\Foo\\tracklet_labels.xml"
     frame_list = "C:\\Foo\\frame_list.txt"
+    output_dir = "C:\\Foo\\Bar"
     
-    tracklets = parse_tracklet_xml(xml)
+    tracklets = TrackletParser.parse_tracklet_xml(tracklet_labels)
     # Create n label text files in C:\Foo\Bar for n recordings
-    convert_tracklets_to_kitti(tracklets, output_dir, frame_list)
+    TrackletParser.convert_tracklets_to_kitti(tracklets, frame_list, output_dir)
 
 if __name__ == "__main__":
     main()
