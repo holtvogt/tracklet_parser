@@ -75,16 +75,16 @@ class TrackletParser:
 
     @staticmethod
     def convert_tracklets_to_kitti(
-        tracklets: List[Tracklet], output_dir: str, frame_list: str
+        tracklets: List[Tracklet], frame_list: str, output_dir: str
     ):
         """Converts tracklet objects into KITTI format.
 
         Arguments:
             tracklets (List[Tracklet]): The tracklet objects
-            output_dir (str): The label folder to contain tracklets
-                information in KITTI format
             frame_list (str): The frame list containing the mapping of actual
                 point cloud file names
+            output_dir (str): The label folder to contain tracklets
+                information in KITTI format
         """
 
         # Create necessary folders for text file
