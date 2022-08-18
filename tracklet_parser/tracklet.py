@@ -20,8 +20,8 @@ class Tracklet:
         self._frame_number = -1
         self._type = ""
         self._truncated = 0.0
-        self.occluded = 0
-        self._alpha = 0.0
+        self._occluded = 0
+        self._alpha = -10
         self._bbox = {"left": 0.0, "top": 0.0, "right": 0.0, "bottom": 0.0}
         self._dimensions = {"height": 0.0, "width": 0.0, "length": 0.0}
         self._location = {"x": 0.0, "y": 0.0, "z": 0.0}
