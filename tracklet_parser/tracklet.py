@@ -160,6 +160,10 @@ class Tracklet:
             truncated (float): The truncation state
         """
 
+        if not 0 <= truncated <= 1:
+            raise ValueError(
+                f"{truncated} is an unknown truncation representative."
+            )
         self._truncated = truncated
 
     @occluded.setter
@@ -170,6 +174,10 @@ class Tracklet:
             occluded (int): The occlusion state
         """
 
+        if not 0 <= occluded <= 3:
+            raise ValueError(
+                f"{occluded} is an unknown occlusion representative."
+            )
         self._occluded = occluded
 
     @alpha.setter
