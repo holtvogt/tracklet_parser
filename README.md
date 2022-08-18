@@ -23,7 +23,7 @@ def main():
     output_dir = "C:\\Foo\\Bar"
     
     tracklets = TrackletParser.parse_tracklet_xml(tracklet_labels)
-    # Create n label text files in C:\Foo\Bar for n recordings
+    # Create n label text files in C:\Foo\Bar for n (labeled) recordings
     TrackletParser.convert_tracklets_to_kitti(tracklets, frame_list, output_dir)
 
 if __name__ == "__main__":
