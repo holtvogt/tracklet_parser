@@ -77,9 +77,8 @@ class Tracklet:
 
     @property
     def alpha(self) -> float:
-        """Get the observation angle `alpha` of the object ranging from.
-
-        [-PI, PI].
+        """Get the observation angle `alpha` of the object ranging from [-PI,
+        PI].
 
         Returns:
             float: The observation angle
@@ -122,9 +121,8 @@ class Tracklet:
 
     @property
     def rotation_y(self) -> float:
-        """The rotation around Y-axis in camera coordinates ranging from.
-
-        [-PI, PI].
+        """The rotation around Y-axis in camera coordinates ranging from [-PI,
+        PI].
 
         Note: Keep in mind that this is in camera coordinates!
 
