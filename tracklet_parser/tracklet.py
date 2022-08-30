@@ -84,7 +84,7 @@ class Tracklet:
             float: The observation angle
         """
 
-        return 0.0
+        return self._alpha
 
     @property
     def bbox(self) -> Dict[str, float]:
