@@ -14,18 +14,18 @@ class Tracklet:
     _bbox: Dict[str, float]
     _dimensions: Dict[str, float]
     _location: Dict[str, float]
-    _rotation_y: float
+    _rotation_z: float
 
     def __init__(self):
         self._frame_number = -1
         self._type = ""
         self._truncated = 0.0
         self._occluded = 0
-        self._alpha = -10
+        self._alpha = 0.0
         self._bbox = {"left": 0.0, "top": 0.0, "right": 0.0, "bottom": 0.0}
         self._dimensions = {"height": 0.0, "width": 0.0, "length": 0.0}
         self._location = {"x": 0.0, "y": 0.0, "z": 0.0}
-        self._rotation_y = 0.0
+        self._rotation_z = 0.0
 
     @property
     def frame_number(self) -> int:
@@ -120,7 +120,7 @@ class Tracklet:
         return deepcopy(self._location)
 
     @property
-    def rotation_y(self) -> float:
+    def rotation_z(self) -> float:
         """The rotation around Y-axis in camera coordinates ranging from [-PI,
         PI].
 
@@ -130,7 +130,7 @@ class Tracklet:
             float: The rotation angle around Y-axis
         """
 
-        return self._rotation_y
+        return self._rotation_z
 
     @frame_number.setter
     def frame_number(self, frame_number: int):
@@ -220,12 +220,12 @@ class Tracklet:
 
         self._location[key] = value
 
-    @rotation_y.setter
-    def rotation_y(self, rotation_y: float):
+    @rotation_z.setter
+    def rotation_z(self, rotation_z: float):
         """Set the rotation angle.
 
         Arguments:
-            rotation_y (float). The rotation angle
+            rotation_z (float). The rotation angle
         """
 
-        self._rotation_y = rotation_y
+        self._rotation_z = rotation_z

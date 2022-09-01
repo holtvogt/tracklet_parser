@@ -4,7 +4,7 @@ from xml.etree.ElementTree import ElementTree
 
 from pandas import read_table
 
-from tracklet_parser.tracklet import Tracklet
+from tracklet import Tracklet
 
 
 @final
@@ -62,8 +62,8 @@ class TrackletParser:
                                         tracklet.put_location(
                                             "z", float(pose_attribute.text)
                                         )
-                                    elif pose_attribute.tag == "ry":
-                                        tracklet.rotation_y = float(
+                                    elif pose_attribute.tag == "rz":
+                                        tracklet.rotation_z = float(
                                             pose_attribute.text
                                         )
                                     elif pose_attribute.tag == "occlusion":
@@ -125,7 +125,7 @@ class TrackletParser:
                 tracklet.location["x"],
                 tracklet.location["y"],
                 tracklet.location["z"],
-                tracklet.rotation_y,
+                tracklet.rotation_z,
             ]
             information = list(map(str, information))
             label = " ".join(information)
