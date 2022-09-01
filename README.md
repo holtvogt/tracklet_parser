@@ -15,7 +15,7 @@ python setup.py install
 Creating a folder with text files in KITTI format. Each text file contains the labeling information of its corresponding recording.
 
 ```python
-from tracklet_parser.tracklet_parser import TrackletParser
+from tracklet_parser import TrackletParser
 
 def main():
     tracklet_labels = "C:\\Foo\\tracklet_labels.xml"
