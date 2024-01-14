@@ -4,7 +4,7 @@ from xml.etree.ElementTree import ElementTree
 
 from pandas import read_table
 
-from tracklet import Tracklet
+from tracklet_parser.tracklet import Tracklet
 
 
 @final
