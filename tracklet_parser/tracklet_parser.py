@@ -1,6 +1,6 @@
 from os import makedirs, path
 from typing import List, final
-from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import Element, ElementTree
 
 from pandas import read_table
 
@@ -49,7 +49,7 @@ class TrackletParser:
         return tracklets
     
     @staticmethod
-    def _parse_tracklet(tracklet_element: ElementTree.Element) -> Tracklet:
+    def _parse_tracklet(tracklet_element: Element) -> Tracklet:
         """Parses a single tracklet element from the XML.
 
         Arguments:
