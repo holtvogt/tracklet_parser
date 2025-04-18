@@ -9,7 +9,25 @@ from tracklet_parser.tracklet import Tracklet
 
 @final
 class TrackletParser:
-    """Parser for Tracklet label parsing in KITTI format."""
+    """A parser for handling tracklet labels in KITTI format.
+
+    This class provides functionality to:
+
+    - Parse tracklet annotations from XML files (e.g., exported from CVAT)
+    - Convert parsed tracklets into KITTI label format for use in autonomous driving datasets
+
+    For example:
+
+    ```python
+    tracklets: List[Tracklet] = TrackletParser.parse_tracklet_xml("path/to/tracklet_labels.xml")
+
+    TrackletParser.convert_tracklets_to_kitti(
+        tracklets,
+        frame_list="path/to/frame_list.txt",
+        output_dir="path/to/output_dir"
+    )
+    ```
+    """
 
     _ATTRIBUTE_MAP = {
         "h": "height",
