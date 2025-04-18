@@ -53,7 +53,7 @@ class TrackletParser:
         """Parses a single tracklet element from the XML.
 
         Arguments:
-            tracklet_element (ElementTree.Element): The tracklet element
+            tracklet_element (Element): The tracklet element
 
         Returns:
             Tracklet: The parsed tracklet
