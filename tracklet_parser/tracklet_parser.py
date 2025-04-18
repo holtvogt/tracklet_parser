@@ -107,7 +107,7 @@ class TrackletParser:
     @staticmethod
     def convert_tracklets_to_kitti(
         tracklets: List[Tracklet], frame_list: str, output_dir: str
-    ):
+    ) -> None:
         """Converts a list of tracklet objects into KITTI format and writes them to the specified output directory.
 
         Arguments:
