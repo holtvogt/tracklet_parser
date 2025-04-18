@@ -43,10 +43,14 @@ class TrackletParser:
         """Parses annotated tracklet labels from a given XML file.
 
         Arguments:
-            tracklet_xml (str): The tracklet XML file path
+            tracklet_xml (str): The path to the tracklet XML file.
 
         Returns:
-            List[Tracklet]: The tracklets
+            List[Tracklet]: A list of parsed Tracklet objects.
+
+        Raises:
+            FileNotFoundError: If the specified XML file does not exist.
+            ValueError: If the XML structure is invalid or the "tracklets" element is missing.
         """
 
         if not path.exists(tracklet_xml):
@@ -71,10 +75,10 @@ class TrackletParser:
         """Parses a single tracklet element from the XML.
 
         Arguments:
-            tracklet_element (Element): The tracklet element
+            tracklet_element (Element): The XML element representing a tracklet.
 
         Returns:
-            Tracklet: The parsed tracklet
+            Tracklet: The parsed Tracklet object.
         """
         tracklet = Tracklet()
         for attribute in tracklet_element:
@@ -104,14 +108,12 @@ class TrackletParser:
     def convert_tracklets_to_kitti(
         tracklets: List[Tracklet], frame_list: str, output_dir: str
     ):
-        """Converts tracklet objects into KITTI format.
+        """Converts a list of tracklet objects into KITTI format and writes them to the specified output directory.
 
-        Arguments:
-            tracklets (List[Tracklet]): The tracklet objects
-            frame_list (str): The frame list containing the mapping of actual
-                point cloud file names
-            output_dir (str): The label folder to contain tracklets
-                information in KITTI format
+        Args:
+            tracklets (List[Tracklet]): A list of Tracklet objects to be converted
+            frame_list (str): Path to a file containing the mapping of frame numbers to point cloud file names
+            output_dir (str): Path to the output directory where the KITTI format label files will be saved
         """
 
         # Create necessary folders for text file
