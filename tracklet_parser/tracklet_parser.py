@@ -1,5 +1,5 @@
 from os import makedirs, path
-from typing import List, final
+from typing import Dict, List, final
 from xml.etree.ElementTree import Element, ElementTree
 
 from pandas import read_table
@@ -29,7 +29,7 @@ class TrackletParser:
     ```
     """
 
-    _ATTRIBUTE_MAP = {
+    _ATTRIBUTE_MAP: Dict[str, str] = {
         "h": "height",
         "w": "width",
         "l": "length",
@@ -118,69 +118,97 @@ class TrackletParser:
         if not path.exists(output_dir):
             makedirs(output_dir)
 
+        label_dict: Dict[int, str] = TrackletParser._load_frame_list(frame_list)
+        frames: List[int] = []
+
+        for tracklet in tracklets:
+            label = TrackletParser._map_tracklet_to_KITTI(tracklet)
+            label_file_name = label_dict.get(tracklet.frame_number, tracklet.frame_number)
+            label_file = path.join(output_dir, f"{label_file_name}.txt")
+
+            TrackletParser._write_label_to_file(label_file, label, tracklet.frame_number, frames)
+
+    @staticmethod
+    def _load_frame_list(frame_list: str) -> Dict[int, str]:
+        """Loads the frame list from the given file.
+
+        Arguments:
+            frame_list (str): The frame list file path
+
+        Returns:
+            Dict[int, str]: A dictionary mapping frame numbers to file prefixes.
+
+        Example:
+            Input (frame list):
+                0 frame_0000
+                1 frame_0001
+                2 frame_0002
+
+            Output:
+                {0: "frame_0000", 1: "frame_0001", 2: "frame_0002"}
+        """
+        if not path.exists(frame_list):
+            print(
+                "Warning: CVAT frame list not found. Label file names will be generated "
+                "using numerical ascending order based on frame numbers."
+            )
+            return {}
+
         # The CVAT export includes a frame list containing frame index and
         # point cloud file mapping which can be used to create label files with
         # same naming as its corresponding point cloud file
-        if not path.exists(frame_list):
-            print(
-                "CVAT frame list not found: Creating label file names in"
-                " numerical ascending order.. "
-            )
+        label_data = read_table(
+            frame_list,
+            sep=" ",
+            names=["Frame Number", "Point Cloud File"],
+            dtype=str,
+        )
 
-        frames: List[int] = []
-        for tracklet in tracklets:
-            # Label information
-            information = [
-                tracklet.type,
-                tracklet.truncated,
-                tracklet.occluded,
-                tracklet.alpha,
-                tracklet.bbox["left"],
-                tracklet.bbox["top"],
-                tracklet.bbox["right"],
-                tracklet.bbox["bottom"],
-                tracklet.dimensions["height"],
-                tracklet.dimensions["width"],
-                tracklet.dimensions["length"],
-                tracklet.location["x"],
-                tracklet.location["y"],
-                tracklet.location["z"],
-                tracklet.rotation_z,
-            ]
-            information = list(map(str, information))
-            label = " ".join(information)
+        return dict(zip(map(int, label_data["Frame Number"]), label_data["Point Cloud File"]))
 
-            if path.exists(frame_list):
-                label_data = read_table(
-                    frame_list,
-                    delim_whitespace=True,
-                    names=["Frame Number", "File Prefix"],
-                    dtype=str,
-                )
-                frame_numbers = list(
-                    map(int, label_data["Frame Number"].to_list())
-                )
-                file_prefixes = list(
-                    map(str, label_data["File Prefix"].to_list())
-                )
-                label_dict = dict(zip(frame_numbers, file_prefixes))
-                label_file_name = label_dict[tracklet.frame_number]
-            else:
-                label_file_name = tracklet.frame_number
-            label_file = path.join(output_dir, f"{label_file_name}.txt")
+    @staticmethod
+    def _map_tracklet_to_KITTI(tracklet: Tracklet) -> str:
+        """Maps a tracklet object to KITTI format.
 
-            # If frame is known, append the label file with new information
-            if tracklet.frame_number in frames:
-                with open(
-                    label_file, mode="a", encoding="utf-8"
-                ) as kitti_file:
-                    kitti_file.write(f"{label}\n")
-            # Otherwise, create new file
-            else:
-                with open(
-                    label_file, mode="w", encoding="utf-8"
-                ) as kitti_file:
-                    kitti_file.seek(0)
-                    kitti_file.write(f"{label}\n")
-                    kitti_file.truncate()
-                frames.append(tracklet.frame_number)
+        Arguments:
+            tracklet (Tracklet): The tracklet object
+
+        Returns:
+            str: The tracklet in KITTI format
+        """
+        information = [
+            tracklet.type,
+            tracklet.truncated,
+            tracklet.occluded,
+            tracklet.alpha,
+            tracklet.bbox["left"],
+            tracklet.bbox["top"],
+            tracklet.bbox["right"],
+            tracklet.bbox["bottom"],
+            tracklet.dimensions["height"],
+            tracklet.dimensions["width"],
+            tracklet.dimensions["length"],
+            tracklet.location["x"],
+            tracklet.location["y"],
+            tracklet.location["z"],
+            tracklet.rotation_z,
+        ]
+        return " ".join(map(str, information))
+    
+    @staticmethod
+    def _write_label_to_file(label_file: str, label: str, frame_number: int, frames: List[int]) -> None:
+        """Writes a label to a specified file, either appending to it or creating a new file.
+
+        Arguments:
+            label_file (str): The path to the file where the label should be written
+            label (str): The label content to write to the file
+            frame_number (int): The frame number associated with the label
+            frames (List[int]): A list of frame numbers to track which frames have been seen
+        """
+        mode = "a" if frame_number in frames else "w"
+
+        with open(label_file, mode, encoding="utf-8") as kitti_file:
+            kitti_file.write(f"{label}\n")
+
+        if frame_number not in frames:
+            frames.append(frame_number)
