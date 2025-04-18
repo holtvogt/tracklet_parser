@@ -9,7 +9,16 @@ from tracklet_parser.tracklet import Tracklet
 
 @final
 class TrackletParser:
-    """Parser for tracklet label parsing in KITTI format."""
+    """Parser for Tracklet label parsing in KITTI format."""
+
+    _ATTRIBUTE_MAP = {
+        "h": "height",
+        "w": "width",
+        "l": "length",
+        "tx": "x",
+        "ty": "y",
+        "tz": "z",
+    }
 
     @staticmethod
     def parse_tracklet_xml(tracklet_xml: str) -> List[Tracklet]:
@@ -23,62 +32,55 @@ class TrackletParser:
         """
 
         if not path.exists(tracklet_xml):
-            print("No tracklet XML file found.")
-            return []
+            raise FileNotFoundError(f"Tracklet XML file not found: {tracklet_xml}")
 
         tree = ElementTree()
         tree.parse(tracklet_xml)
 
         # Extract tracklet information from XML
-        tracklets: List[Tracklet] = []
         tracklet_elements = tree.find("tracklets")
-        for tracklet_element in tracklet_elements:
-            if tracklet_element.tag == "item":
-                tracklet = Tracklet()
-                for attribute in tracklet_element:
-                    if attribute.tag == "objectType":
-                        tracklet.type = attribute.text
-                    elif attribute.tag == "h":
-                        tracklet.put_dimension("height", float(attribute.text))
-                    elif attribute.tag == "w":
-                        tracklet.put_dimension("width", float(attribute.text))
-                    elif attribute.tag == "l":
-                        tracklet.put_dimension("length", float(attribute.text))
-                    elif attribute.tag == "first_frame":
-                        tracklet.frame_number = int(attribute.text)
-                    elif attribute.tag == "poses":
-                        for pose in attribute:
-                            if pose.tag == "item":
-                                for pose_attribute in pose:
-                                    if pose_attribute.tag == "tx":
-                                        tracklet.put_location(
-                                            "x", float(pose_attribute.text)
-                                        )
-                                    elif pose_attribute.tag == "ty":
-                                        tracklet.put_location(
-                                            "y", float(pose_attribute.text)
-                                        )
-                                    elif pose_attribute.tag == "tz":
-                                        tracklet.put_location(
-                                            "z", float(pose_attribute.text)
-                                        )
-                                    elif pose_attribute.tag == "rz":
-                                        tracklet.rotation_z = float(
-                                            pose_attribute.text
-                                        )
-                                    elif pose_attribute.tag == "occlusion":
-                                        tracklet.occluded = int(
-                                            pose_attribute.text
-                                        )
-                                    elif pose_attribute.tag == "truncation":
-                                        tracklet.truncated = float(
-                                            pose_attribute.text
-                                        )
-                tracklets.append(tracklet)
+        if tracklet_elements is None:
+            raise ValueError("Invalid XML structure: 'tracklets' element not found.")
+        
+        tracklets: List[Tracklet] = [TrackletParser._parse_tracklet(tracklet_element) for tracklet_element in tracklet_elements if tracklet_element.tag == "item"]
 
         # Sort tracklets by ascending frame number
-        tracklets.sort(key=lambda x: x.frame_number)
+        tracklets.sort(key=lambda tracklet: tracklet.frame_number)
         return tracklets
+    
+    @staticmethod
+    def _parse_tracklet(tracklet_element: ElementTree.Element) -> Tracklet:
+        """Parses a single tracklet element from the XML.
+
+        Arguments:
+            tracklet_element (ElementTree.Element): The tracklet element
+
+        Returns:
+            Tracklet: The parsed tracklet
+        """
+        tracklet = Tracklet()
+        for attribute in tracklet_element:
+            if attribute.tag == "objectType":
+                tracklet.type = attribute.text
+            elif attribute.tag in ["h", "w", "l"]:
+                tracklet.put_dimension(TrackletParser._ATTRIBUTE_MAP[attribute.tag], float(attribute.text))
+            elif attribute.tag == "first_frame":
+                tracklet.frame_number = int(attribute.text)
+            elif attribute.tag == "poses":
+                pose = attribute.find("item")
+                if pose is not None:
+                    for pose_attribute in pose:
+                        if pose_attribute.tag in ["tx", "ty", "tz"]:
+                            tracklet.put_location(
+                                TrackletParser._ATTRIBUTE_MAP[pose_attribute.tag], float(pose_attribute.text)
+                            )
+                        elif pose_attribute.tag == "rz":
+                            tracklet.rotation_z = float(pose_attribute.text)
+                        elif pose_attribute.tag == "occlusion":
+                            tracklet.occluded = int(pose_attribute.text)
+                        elif pose_attribute.tag == "truncation":
+                            tracklet.truncated = float(pose_attribute.text)
+        return tracklet
 
     @staticmethod
     def convert_tracklets_to_kitti(
