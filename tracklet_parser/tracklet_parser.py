@@ -28,7 +28,6 @@ class TrackletParser:
     )
     ```
     """
-
     _ATTRIBUTE_MAP: Dict[str, str] = {
         "h": "height",
         "w": "width",
@@ -52,7 +51,6 @@ class TrackletParser:
             FileNotFoundError: If the specified XML file does not exist.
             ValueError: If the XML structure is invalid or the "tracklets" element is missing.
         """
-
         if not path.exists(tracklet_xml):
             raise FileNotFoundError(f"Tracklet XML file not found: {tracklet_xml}")
 
@@ -115,8 +113,6 @@ class TrackletParser:
             frame_list (str): Path to a file containing the mapping of frame numbers to point cloud file names
             output_dir (str): Path to the output directory where the KITTI format label files will be saved
         """
-
-        # Create necessary folders for text file
         if not path.exists(output_dir):
             makedirs(output_dir)
 
