@@ -110,7 +110,7 @@ class TrackletParser:
     ):
         """Converts a list of tracklet objects into KITTI format and writes them to the specified output directory.
 
-        Args:
+        Arguments:
             tracklets (List[Tracklet]): A list of Tracklet objects to be converted
             frame_list (str): Path to a file containing the mapping of frame numbers to point cloud file names
             output_dir (str): Path to the output directory where the KITTI format label files will be saved
