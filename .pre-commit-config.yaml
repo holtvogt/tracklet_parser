@@ -1,15 +1,15 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 23.12.1
+    rev: 25.1.0
     hooks:
       - id: black
-        language_version: python3.10
+        language_version: python3.12
         args:
           - "--line-length"
           - "79"
           - "--preview"
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+    rev: 6.0.1
     hooks:
       - id: isort
         args:
@@ -23,19 +23,26 @@ repos:
           - "--line-length"
           - "79"
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.4.1
     hooks:
       - id: codespell
-  - repo: https://github.com/myint/docformatter
-    rev: v1.7.5
+  # TODO: Remove this when docformatter is fixed
+  #- repo: https://github.com/myint/docformatter
+  #  rev: v1.7.5
+  - repo: local
     hooks:
       - id: docformatter
+        name: docformatter
+        entry: python -Im docformatter
+        additional_dependencies:
+          - docformatter == 1.7.5
         args:
           - "--in-place"
           - "--wrap-descriptions"
           - "79"
+        language: python
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: check-merge-conflict
       - id: check-yaml
