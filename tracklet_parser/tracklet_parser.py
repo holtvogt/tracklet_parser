@@ -1,3 +1,4 @@
+from logging import Logger, getLogger
 from os import makedirs, path
 from typing import Dict, List, final
 from xml.etree.ElementTree import Element, ElementTree
@@ -13,10 +14,10 @@ class TrackletParser:
 
     This class provides functionality to:
 
-    - Parse tracklet annotations from XML files (e.g., exported from CVAT)
-    - Convert parsed tracklets into KITTI label format for use in autonomous driving datasets
+    - Parse tracklet annotations from XML files (e.g., exported from CVAT).
+    - Convert parsed tracklets into KITTI label format for use in autonomous driving datasets.
 
-    For example:
+    ## Example:
 
     ```python
     tracklets: List[Tracklet] = TrackletParser.parse_tracklet_xml("path/to/tracklet_labels.xml")
@@ -28,6 +29,7 @@ class TrackletParser:
     )
     ```
     """
+    _LOGGER: Logger = getLogger(__name__)
     _ATTRIBUTE_MAP: Dict[str, str] = {
         "h": "height",
         "w": "width",
@@ -50,6 +52,7 @@ class TrackletParser:
         Raises:
             FileNotFoundError: If the specified XML file does not exist.
             ValueError: If the XML structure is invalid or the "tracklets" element is missing.
+            ParseError: If the parser fails to parse the document.
         """
         if not path.exists(tracklet_xml):
             raise FileNotFoundError(f"Tracklet XML file not found: {tracklet_xml}")
@@ -109,9 +112,9 @@ class TrackletParser:
         """Converts a list of tracklet objects into KITTI format and writes them to the specified output directory.
 
         Arguments:
-            tracklets (List[Tracklet]): A list of Tracklet objects to be converted
-            frame_list (str): Path to a file containing the mapping of frame numbers to point cloud file names
-            output_dir (str): Path to the output directory where the KITTI format label files will be saved
+            tracklets (List[Tracklet]): A list of Tracklet objects to be converted.
+            frame_list (str): Path to a file containing the mapping of frame numbers to point cloud file names.
+            output_dir (str): Path to the output directory where the KITTI format label files will be saved.
         """
         if not path.exists(output_dir):
             makedirs(output_dir)
@@ -131,7 +134,7 @@ class TrackletParser:
         """Loads the frame list from the given file.
 
         Arguments:
-            frame_list (str): The frame list file path
+            frame_list (str): The frame list file path.
 
         Returns:
             Dict[int, str]: A dictionary mapping frame numbers to file prefixes.
@@ -146,8 +149,8 @@ class TrackletParser:
                 {0: "frame_0000", 1: "frame_0001", 2: "frame_0002"}
         """
         if not path.exists(frame_list):
-            print(
-                "Warning: CVAT frame list not found. Label file names will be generated "
+            TrackletParser._LOGGER.warning(
+                "CVAT frame list file not found. Label file names will be generated "
                 "using numerical ascending order based on frame numbers."
             )
             return {}
@@ -169,10 +172,10 @@ class TrackletParser:
         """Maps a tracklet object to KITTI format.
 
         Arguments:
-            tracklet (Tracklet): The tracklet object
+            tracklet (Tracklet): The tracklet object.
 
         Returns:
-            str: The tracklet in KITTI format
+            str: The tracklet in KITTI format.
         """
         information = [
             tracklet.type,
@@ -198,10 +201,10 @@ class TrackletParser:
         """Writes a label to a specified file, either appending to it or creating a new file.
 
         Arguments:
-            label_file (str): The path to the file where the label should be written
-            label (str): The label content to write to the file
-            frame_number (int): The frame number associated with the label
-            frames (List[int]): A list of frame numbers to track which frames have been seen
+            label_file (str): The path to the file where the label should be written.
+            label (str): The label content to write to the file.
+            frame_number (int): The frame number associated with the label.
+            frames (List[int]): A list of frame numbers to track which frames have been seen.
         """
         mode = "a" if frame_number in frames else "w"
 
