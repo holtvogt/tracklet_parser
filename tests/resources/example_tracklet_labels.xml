@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE boost_serialization>
+<boost_serialization version="9" signature="serialization::archive">
+<tracklets version="0" tracking_level="0" class_id="0">
+    <!-- First Tracklet -->
+  <item>
+    <objectType>Pedestrian</objectType>
+    <h>0.56</h>
+    <w>0.72</w>
+    <l>1.71</l>
+    <first_frame>42</first_frame>
+    <poses>
+      <item>
+        <tx>0.85</tx>
+        <ty>-1.34</ty>
+        <tz>-1.61</tz>
+        <rx>0.0</rx>
+        <ry>0.0</ry>
+        <rz>0.0</rz>
+        <occlusion>1</occlusion>
+        <truncation>0.1</truncation>
+      </item>
+    </poses>
+  </item>
+
+  <!-- Second Tracklet -->
+  <item>
+    <objectType>Car</objectType>
+    <h>1.50</h>
+    <w>1.80</w>
+    <l>4.20</l>
+    <first_frame>100</first_frame>
+    <poses>
+      <item>
+        <tx>5.0</tx>
+        <ty>2.0</ty>
+        <tz>0.0</tz>
+        <rx>0.0</rx>
+        <ry>0.0</ry>
+        <rz>1.57</rz>
+        <occlusion>2</occlusion>
+        <truncation>0.5</truncation>
+      </item>
+    </poses>
+  </item>
+
+  <!-- Third Tracklet (with missing poses) -->
+  <item>
+    <objectType>Cyclist</objectType>
+    <h>1.70</h>
+    <w>0.60</w>
+    <l>1.90</l>
+    <first_frame>200</first_frame>
+  </item>
+</tracklets>
+</boost_serialization>
