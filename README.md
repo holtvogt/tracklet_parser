@@ -17,7 +17,7 @@ A parser for tracklet labels in KITTI Raw Format 1.0 created by the [Computer Vi
 
 ## Installation
 
-Install the package directly using `pip` from [PyPI](https://pypi.org/):
+Install the package directly using `pip` from [PyPI](https://pypi.org/project/tracklet-parser/):
 
 ```bash
 pip install tracklet-parser
