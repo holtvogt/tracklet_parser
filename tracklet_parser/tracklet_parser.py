@@ -29,6 +29,7 @@ class TrackletParser:
     )
     ```
     """
+
     _LOGGER: Logger = getLogger(__name__)
     _ATTRIBUTE_MAP: Dict[str, str] = {
         "h": "height",
@@ -55,7 +56,9 @@ class TrackletParser:
             ParseError: If the parser fails to parse the document.
         """
         if not path.exists(tracklet_xml):
-            raise FileNotFoundError(f"Tracklet XML file not found: {tracklet_xml}")
+            raise FileNotFoundError(
+                f"Tracklet XML file not found: {tracklet_xml}"
+            )
 
         tree = ElementTree()
         tree.parse(tracklet_xml)
@@ -63,14 +66,20 @@ class TrackletParser:
         # Extract tracklet information from XML
         tracklet_elements = tree.find("tracklets")
         if tracklet_elements is None:
-            raise ValueError("Invalid XML structure: 'tracklets' element not found.")
-        
-        tracklets: List[Tracklet] = [TrackletParser._parse_tracklet(tracklet_element) for tracklet_element in tracklet_elements if tracklet_element.tag == "item"]
+            raise ValueError(
+                "Invalid XML structure: 'tracklets' element not found."
+            )
+
+        tracklets: List[Tracklet] = [
+            TrackletParser._parse_tracklet(tracklet_element)
+            for tracklet_element in tracklet_elements
+            if tracklet_element.tag == "item"
+        ]
 
         # Sort tracklets by ascending frame number
         tracklets.sort(key=lambda tracklet: tracklet.frame_number)
         return tracklets
-    
+
     @staticmethod
     def _parse_tracklet(tracklet_element: Element) -> Tracklet:
         """Parses a single tracklet element from the XML.
@@ -86,7 +95,10 @@ class TrackletParser:
             if attribute.tag == "objectType":
                 tracklet.type = attribute.text
             elif attribute.tag in ["h", "w", "l"]:
-                tracklet.put_dimension(TrackletParser._ATTRIBUTE_MAP[attribute.tag], float(attribute.text))
+                tracklet.put_dimension(
+                    TrackletParser._ATTRIBUTE_MAP[attribute.tag],
+                    float(attribute.text),
+                )
             elif attribute.tag == "first_frame":
                 tracklet.frame_number = int(attribute.text)
             elif attribute.tag == "poses":
@@ -95,7 +107,10 @@ class TrackletParser:
                     for pose_attribute in pose:
                         if pose_attribute.tag in ["tx", "ty", "tz"]:
                             tracklet.put_location(
-                                TrackletParser._ATTRIBUTE_MAP[pose_attribute.tag], float(pose_attribute.text)
+                                TrackletParser._ATTRIBUTE_MAP[
+                                    pose_attribute.tag
+                                ],
+                                float(pose_attribute.text),
                             )
                         elif pose_attribute.tag == "rz":
                             tracklet.rotation_z = float(pose_attribute.text)
@@ -120,15 +135,21 @@ class TrackletParser:
         if not path.exists(output_dir):
             makedirs(output_dir)
 
-        label_dict: Dict[int, str] = TrackletParser._load_frame_list(frame_list)
+        label_dict: Dict[int, str] = TrackletParser._load_frame_list(
+            frame_list
+        )
         frames: List[int] = []
 
         for tracklet in tracklets:
             label = TrackletParser._map_tracklet_to_KITTI(tracklet)
-            label_file_name = label_dict.get(tracklet.frame_number, tracklet.frame_number)
+            label_file_name = label_dict.get(
+                tracklet.frame_number, tracklet.frame_number
+            )
             label_file = path.join(output_dir, f"{label_file_name}.txt")
 
-            TrackletParser._write_label_to_file(label_file, label, tracklet.frame_number, frames)
+            TrackletParser._write_label_to_file(
+                label_file, label, tracklet.frame_number, frames
+            )
 
     @staticmethod
     def _load_frame_list(frame_list: str) -> Dict[int, str]:
@@ -166,7 +187,12 @@ class TrackletParser:
             dtype=str,
         )
 
-        return dict(zip(map(int, label_data["Frame Number"]), label_data["Point Cloud File"]))
+        return dict(
+            zip(
+                map(int, label_data["Frame Number"]),
+                label_data["Point Cloud File"],
+            )
+        )
 
     @staticmethod
     def _map_tracklet_to_KITTI(tracklet: Tracklet) -> str:
@@ -196,9 +222,11 @@ class TrackletParser:
             tracklet.rotation_z,
         ]
         return " ".join(map(str, information))
-    
+
     @staticmethod
-    def _write_label_to_file(label_file: str, label: str, frame_number: int, frames: List[int]) -> None:
+    def _write_label_to_file(
+        label_file: str, label: str, frame_number: int, frames: List[int]
+    ) -> None:
         """Writes a label to a specified file, either appending to it or
         creating a new file.
 
