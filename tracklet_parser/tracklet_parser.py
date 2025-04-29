@@ -109,7 +109,8 @@ class TrackletParser:
     def convert_tracklets_to_kitti(
         tracklets: List[Tracklet], frame_list: str, output_dir: str
     ) -> None:
-        """Converts a list of tracklet objects into KITTI format and writes them to the specified output directory.
+        """Converts a list of tracklet objects into KITTI format and writes
+        them to the specified output directory.
 
         Arguments:
             tracklets (List[Tracklet]): A list of Tracklet objects to be converted.
@@ -198,7 +199,8 @@ class TrackletParser:
     
     @staticmethod
     def _write_label_to_file(label_file: str, label: str, frame_number: int, frames: List[int]) -> None:
-        """Writes a label to a specified file, either appending to it or creating a new file.
+        """Writes a label to a specified file, either appending to it or
+        creating a new file.
 
         Arguments:
             label_file (str): The path to the file where the label should be written.
