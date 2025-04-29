@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/assets/logo.png" alt="Tracklet Parser" width="100%" max-width="800px">
+  <img src="/assets/logo.png" alt="Tracklet Parser" width="50%">
 </p>
 
 # Tracklet Parser
