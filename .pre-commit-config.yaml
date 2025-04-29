@@ -40,6 +40,8 @@ repos:
           - "--in-place"
           - "--wrap-descriptions"
           - "79"
+          - "--wrap-summaries"
+          - "79"
         language: python
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
