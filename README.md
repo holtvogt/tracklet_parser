@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="/assets/logo.png" alt="Tracklet Parser" width="100%" max-width="800px">
+</p>
+
 # Tracklet Parser
 
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/holtvogt/tracklet_parser/blob/develop/LICENSE.txt)
